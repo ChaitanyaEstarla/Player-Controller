@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -14,7 +15,8 @@ public class PlayerController : MonoBehaviour
     private float m_MoveX;
     private float m_MoveY;
     private Vector3 m_LastDirection = Vector3.left;
-    private bool m_CanJumpInAir;
+    private int m_AirJumpCount;
+    private int m_AirJumpCountMax;
     
     [Header("Private Fields")]
     [SerializeField] private BoxCollider2D boxCollider2D;
@@ -24,6 +26,12 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Unity Event Functions
+
+    private void Awake()
+    {
+        m_AirJumpCountMax = 2;
+    }
+
     private void Update()
     {
         CheckForMovementInput();
@@ -36,9 +44,9 @@ public class PlayerController : MonoBehaviour
 
     private void CheckForMovementInput()
     {
-        if (!m_CanJumpInAir && IsGrounded())
+        if (IsGrounded())
         {
-            m_CanJumpInAir = true;
+            m_AirJumpCount = 0;
         }
         
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
@@ -59,10 +67,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (IsGrounded()) Jump();
-            else if (m_CanJumpInAir)
+            else if (m_AirJumpCount < m_AirJumpCountMax)
             {
                 Jump();
-                m_CanJumpInAir = false;
+                m_AirJumpCount++;
             }
         }
     }
