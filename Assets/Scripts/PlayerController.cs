@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float dashDistance;
     public float jumpVelocity;
-    
+    public Transform frontCheck;
+    public float wallSlidingSpeed;
+
     #endregion
 
     #region Private Variables
@@ -17,7 +19,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_LastDirection = Vector3.left;
     private int m_AirJumpCount;
     private int m_AirJumpCountMax;
-    
+    private bool m_MovePlayer;
+    private bool m_IsTouchingFront;
+    private bool m_WallSlidig;
+
     [Header("Private Fields")]
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private Rigidbody2D playerRigidbody;
@@ -29,12 +34,20 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        m_AirJumpCountMax = 2;
+        m_AirJumpCountMax = 1;
     }
 
     private void Update()
     {
         CheckForMovementInput();
+    }
+
+    private void FixedUpdate()
+    {
+        if (m_MovePlayer)
+        {
+            MovePlayer();
+        }
     }
 
     #endregion
@@ -51,12 +64,18 @@ public class PlayerController : MonoBehaviour
         
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            MovePlayer(-1,0);
+            m_MovePlayer = true;
+            m_MoveX = -1;
+            m_MoveY = 0;
+            TurnTowardsDirection(-1);
         }
         
         if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            MovePlayer(1,0);
+            m_MovePlayer = true;
+            m_MoveX = 1;
+            m_MoveY = 0;
+            TurnTowardsDirection(1);
         }
         
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -75,13 +94,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MovePlayer(float x, float y)
+    private void MovePlayer()
     {
-        m_MoveX = x;
-        m_MoveY = y;
-        var moveDirection = new Vector3(m_MoveX, m_MoveY).normalized;
+        var moveDirection = new Vector3( m_MoveX, m_MoveY).normalized;
         transform.position += moveDirection * (speed * Time.deltaTime);
         m_LastDirection = moveDirection;
+        m_MovePlayer = false;
     }
 
     private void Dash()
@@ -99,6 +117,11 @@ public class PlayerController : MonoBehaviour
         var bounds = boxCollider2D.bounds;
         var raycastHit2D = Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, 0.1f, platformsLayerMask);
         return raycastHit2D.collider != null;
+    }
+    
+    private void TurnTowardsDirection(int direction)
+    {
+        
     }
 
     #endregion
