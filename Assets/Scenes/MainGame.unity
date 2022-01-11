@@ -376,7 +376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &481622929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,7 +751,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &707285174
 Transform:
   m_ObjectHideFlags: 0
@@ -833,7 +833,7 @@ Transform:
   m_Children:
   - {fileID: 1854454940}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -1004,7 +1004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1228801409
 Transform:
   m_ObjectHideFlags: 0
@@ -1039,7 +1039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1261121615
 Transform:
   m_ObjectHideFlags: 0
@@ -1053,7 +1053,7 @@ Transform:
   m_Children:
   - {fileID: 1435436511}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1261121616
 SpriteRenderer:
@@ -1169,8 +1169,9 @@ MonoBehaviour:
   dashDistance: 5
   jumpVelocity: 12.5
   frontCheck: {fileID: 1435436511}
-  wallSlidingSpeed: 0
-  boxCollider2D: {fileID: 1261121618}
+  wallSlidingSpeed: 8
+  frontCheckSize: {x: 0.1, y: 0.1}
+  playerBoxCollider2D: {fileID: 1261121618}
   playerRigidbody: {fileID: 1261121617}
   platformsLayerMask:
     serializedVersion: 2
@@ -1632,7 +1633,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1766737242
 MonoBehaviour:
   m_ObjectHideFlags: 0

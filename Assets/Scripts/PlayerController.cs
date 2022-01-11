@@ -1,5 +1,7 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public float jumpVelocity;
     public Transform frontCheck;
     public float wallSlidingSpeed;
+    public Vector2 frontCheckSize;
 
     #endregion
 
@@ -23,8 +26,9 @@ public class PlayerController : MonoBehaviour
     private bool m_IsTouchingFront;
     private bool m_WallSlidig;
 
+    [FormerlySerializedAs("boxCollider2D")]
     [Header("Private Fields")]
-    [SerializeField] private BoxCollider2D boxCollider2D;
+    [SerializeField] private BoxCollider2D playerBoxCollider2D;
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private LayerMask platformsLayerMask;
 
@@ -54,12 +58,12 @@ public class PlayerController : MonoBehaviour
 
     #region Private Functions
 
-
     private void CheckForMovementInput()
     {
         if (IsGrounded())
         {
             m_AirJumpCount = 0;
+            m_WallSlidig = false;
         }
         
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
@@ -92,6 +96,11 @@ public class PlayerController : MonoBehaviour
                 m_AirJumpCount++;
             }
         }
+
+        if (m_MovePlayer)
+        {
+            WallCheck();
+        }
     }
 
     private void MovePlayer()
@@ -114,20 +123,44 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        var bounds = boxCollider2D.bounds;
+        var bounds = playerBoxCollider2D.bounds;
         var raycastHit2D = Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, 0.1f, platformsLayerMask);
         return raycastHit2D.collider != null;
     }
     
     private void TurnTowardsDirection(int direction)
     {
-        
+        var position = frontCheck.localPosition;
+        position = new Vector2( 0.55f * direction, position.y);
+        frontCheck.localPosition = position;
+    }
+
+    private void WallCheck()
+    {
+        m_IsTouchingFront = Physics2D.OverlapBox(frontCheck.position, frontCheckSize, 0f, platformsLayerMask);
+        if (!IsGrounded() && m_IsTouchingFront)
+        {
+            m_WallSlidig = true;
+        }
+        else
+        {
+            m_WallSlidig = false;
+        }
+
+        if (!m_WallSlidig) return;
+        var velocity = playerRigidbody.velocity;
+        playerRigidbody.velocity = new Vector2(velocity.x, Mathf.Clamp(velocity.y, -wallSlidingSpeed, float.MaxValue));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawCube(frontCheck.position, frontCheckSize);
+        Gizmos.color = Color.green;
     }
 
     #endregion
 
     #region Public Functions
-
     
 
     #endregion
