@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private int m_AirJumpCountMax;
     private bool m_MovePlayer;
     private bool m_IsTouchingFront;
-    private bool m_WallSlidig;
+    private bool m_WallSliding;
 
     [FormerlySerializedAs("boxCollider2D")]
     [Header("Private Fields")]
@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        
         CheckForMovementInput();
     }
 
@@ -63,7 +64,7 @@ public class PlayerController : MonoBehaviour
         if (IsGrounded())
         {
             m_AirJumpCount = 0;
-            m_WallSlidig = false;
+            m_WallSliding = false;
         }
         
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
@@ -140,14 +141,14 @@ public class PlayerController : MonoBehaviour
         m_IsTouchingFront = Physics2D.OverlapBox(frontCheck.position, frontCheckSize, 0f, platformsLayerMask);
         if (!IsGrounded() && m_IsTouchingFront)
         {
-            m_WallSlidig = true;
+            m_WallSliding = true;
         }
         else
         {
-            m_WallSlidig = false;
+            m_WallSliding = false;
         }
 
-        if (!m_WallSlidig) return;
+        if (!m_WallSliding) return;
         var velocity = playerRigidbody.velocity;
         playerRigidbody.velocity = new Vector2(velocity.x, Mathf.Clamp(velocity.y, -wallSlidingSpeed, float.MaxValue));
     }
